@@ -212,11 +212,12 @@ def add():
 	passw=request.get_json()["password"]
 	#print("name:", name)
 	#print("pass:", passw)
-
+	print("hii from put users")
 	d=[name,passw]
 	if(fun(passw)==0):
 		abort(400,"password is not correct")
-	res=requests.post("http://127.0.0.1:80/api/v1/db/write",json={"insert":d,"column":["name","pass"],"table":"users","indicate":"0"})	
+	
+	res=requests.post("http://3.87.247.57:80/api/v1/db/write",json={"insert":d,"column":["name","pass"],"table":"users","indicate":"0"})	
 
 		
 	if(res.json()==0):
@@ -231,7 +232,7 @@ def remove(name):
 	fun_for_count()
 	if(request.method!="DELETE"):
 		abort(405,"method not allowed")
-	res=requests.post("http://127.0.0.1:80/api/v1/db/write",json={"table":"users","delete":name,"column":"name","indicate":"1"})
+	res=requests.post("http://3.87.247.57:80/api/v1/db/write",json={"table":"users","delete":name,"column":"name","indicate":"1"})
 	#print(res.json())
 	if(res.json()==0):
 		abort(400,"user does not  exists")
@@ -245,7 +246,7 @@ def list_users():
 	if(request.method!="GET"):
 		abort(405,"method not allowed")
 	
-	src_dest_check=requests.post("http://127.0.0.1:80/api/v1/db/read",json={"insert":"","column":["name"],"table":"users","where":[]})
+	src_dest_check=requests.post("http://3.87.247.57:80/api/v1/db/read",json={"insert":"","column":["name"],"table":"users","where":[]})
 	if(src_dest_check.json().get("response")==0):
 		print("empty list no users from list users api")	
 		return json.dumps([]),200, {'ContentType':'application/json'}
@@ -262,7 +263,7 @@ def clear_db():
 	if(request.method!="POST"):
 		abort(405,"method not allowed")
 	
-	res=requests.post("http://127.0.0.1:80/api/v1/db/write",json={"indicate":"3"})	
+	res=requests.post("http://3.87.247.57:80/api/v1/db/write",json={"indicate":"3"})	
 	if(res.json()==0):
 		abort(400,"failed to clear")
 	elif(res.json()==1):
