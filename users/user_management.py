@@ -8,7 +8,7 @@ from datetime import datetime
 app=Flask(__name__)
 cursor = sqlite3.connect("rideshare.db")
 file=open("text.txt","w")
-file.write("%d %d"%(0,0))
+file.write("0")
 file.close()
 def fun_for_count():
 
@@ -16,16 +16,16 @@ def fun_for_count():
 		file=open("text.txt","r")
 		#print(file.readline()[0])
 		e=file.readline()
-		q=int(e[0])+1
-		print(q,e[1])
+		q=int(e)+1
+		print(q,"hjkl")
 		file.close()
 		file=open("text.txt","w")
-		file.write("%d %s"%(q,e[2]))		
+		file.write(str(q))		
 		#print("as")
 		#file.close()
 	except:
 		file=open("text.txt","w")
-		file.write("%d %d"%(0,0))		
+		file.write("0")		
 		#print("read")
 	file.close()
 
@@ -47,9 +47,10 @@ def fun(passw):
 			return 0
 	return 1
 
+
 @app.route("/",methods=["GET"])
 def hello():
-       return "<h1>Hello users</h1>"
+      return "<h1>Hello users</h1>"
 
 @app.route("/api/v1/db/read",methods=["POST"])
 def read_database():
@@ -217,7 +218,7 @@ def add():
 	if(fun(passw)==0):
 		abort(400,"password is not correct")
 	
-	res=requests.post("http://18.212.183.73:80/api/v1/db/write",json={"insert":d,"column":["name","pass"],"table":"users","indicate":"0"})	
+	res=requests.post("http://18.234.100.70:80/api/v1/db/write",json={"insert":d,"column":["name","pass"],"table":"users","indicate":"0"})	
 
 		
 	if(res.json()==0):
@@ -232,7 +233,7 @@ def remove(name):
 	fun_for_count()
 	if(request.method!="DELETE"):
 		abort(405,"method not allowed")
-	res=requests.post("http://18.212.183.73:80/api/v1/db/write",json={"table":"users","delete":name,"column":"name","indicate":"1"})
+	res=requests.post("http://18.234.100.70:80/api/v1/db/write",json={"table":"users","delete":name,"column":"name","indicate":"1"})
 	#print(res.json())
 	if(res.json()==0):
 		abort(400,"user does not  exists")
@@ -246,7 +247,7 @@ def list_users():
 	if(request.method!="GET"):
 		abort(405,"method not allowed")
 	
-	src_dest_check=requests.post("http://18.212.183.73:80/api/v1/db/read",json={"insert":"","column":["name"],"table":"users","where":[]})
+	src_dest_check=requests.post("http://18.234.100.70:80/api/v1/db/read",json={"insert":"","column":["name"],"table":"users","where":[]})
 	if(src_dest_check.json().get("response")==0):
 		print("empty list no users from list users api")	
 		return json.dumps([]),200, {'ContentType':'application/json'}
@@ -263,7 +264,7 @@ def clear_db():
 	if(request.method!="POST"):
 		abort(405,"method not allowed")
 	
-	res=requests.post("http://18.212.183.73:80/api/v1/db/write",json={"indicate":"3"})	
+	res=requests.post("http://18.234.100.70:80/api/v1/db/write",json={"indicate":"3"})	
 	if(res.json()==0):
 		abort(400,"failed to clear")
 	elif(res.json()==1):
@@ -280,7 +281,7 @@ def get_http_request():
 	except:
 		return json.dumps([0]),200, {'ContentType':'application/json'}	
 	print("couting the number of http requests")
-	return json.dumps([int(e[0])]),200, {'ContentType':'application/json'}
+	return json.dumps([int(e)]),200, {'ContentType':'application/json'}
 
 @app.route("/api/v1/_count",methods=["DELETE"])
 def clear_http_request():
@@ -288,7 +289,7 @@ def clear_http_request():
 		abort(405,"method not allowed")
 	
 	file=open("text.txt","w")
-	file.write("%d %d"%(0,0))		
+	file.write("0")		
 
 	file.close()
 	return json.dumps({'success':"cleared successfully"}), 200, {'ContentType':'application/json'}
